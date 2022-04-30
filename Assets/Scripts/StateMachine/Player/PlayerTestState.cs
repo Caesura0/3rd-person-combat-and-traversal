@@ -10,7 +10,7 @@ public class PlayerTestState : PlayerBaseState
 
     public override void Enter()
     {
-        throw new System.NotImplementedException();
+        
     }
     public override void Tick(float deltaTime)
     {
@@ -18,12 +18,21 @@ public class PlayerTestState : PlayerBaseState
         movement.x = stateMachine.InputReader.movementValue.x;
         movement.y = 0;
         movement.z = stateMachine.InputReader.movementValue.y;
-        stateMachine.transform.Translate(movement * Time.deltaTime);
+        
+        stateMachine.CharacterController.Move(movement *  stateMachine.FreeLookMovementSpeed * Time.deltaTime);
+
+        if(stateMachine.InputReader.movementValue == Vector2.zero) 
+        {
+            stateMachine.Animator.SetFloat("FreeLookSpeed", 0, 0.1f, deltaTime);
+            return; 
+        }
+        stateMachine.Animator.SetFloat("FreeLookSpeed", 1, 0.1f, deltaTime);
+        stateMachine.transform.rotation = Quaternion.LookRotation(movement);
     }
 
     public override void Exit()
     {
-        throw new System.NotImplementedException();
+       
     }
 
 }
